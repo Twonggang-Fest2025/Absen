@@ -1,0 +1,39 @@
+PAKET WEBSITE ABSENSI 34 SISWA
+================================
+
+Isi paket:
+- Index.html : tampilan form untuk HP siswa.
+- Code.gs    : backend Google Apps Script yang menyimpan data ke Google Sheets.
+
+CARA MEMASANG
+1. Buat Google Spreadsheet baru dari akun Google guru.
+2. Di Spreadsheet, pilih Ekstensi > Apps Script.
+3. Hapus kode bawaan di Code.gs, lalu salin isi file Code.gs dari paket ini.
+4. Klik tanda + di samping Files > HTML. Beri nama persis: Index.
+5. Salin isi file Index.html ke file HTML tersebut.
+6. Simpan proyek.
+7. Jalankan fungsi setup() satu kali dari editor Apps Script. Setujui izin yang diminta.
+8. Kembali ke Spreadsheet. Pastikan muncul tab bernama "Absensi".
+9. Di Apps Script pilih Deploy > New deployment.
+10. Klik ikon roda gigi > pilih Web app.
+11. Execute as: Me. Who has access: Anyone (atau Anyone with Google account jika sekolah mewajibkan login).
+12. Klik Deploy, selesaikan otorisasi, lalu salin URL Web app.
+13. Bagikan URL itu kepada 34 siswa. Semua siswa membuka tautan yang sama dari HP masing-masing.
+
+CARA KERJA
+- Setiap siswa mengisi nomor urut 1–34, nama, kelas, dan status Hadir/Izin/Sakit.
+- Data langsung masuk ke Google Sheets guru.
+- Sistem mencegah nomor urut yang sama mengirim dua kali pada tanggal yang sama.
+- LockService membantu mencegah duplikasi ketika beberapa siswa menekan tombol bersamaan.
+
+CATATAN WHATSAPP
+Paket ini menyimpan rekap terpusat di Google Sheets, tetapi belum mengirim WhatsApp otomatis.
+Untuk otomatis mengirim pesan WhatsApp dibutuhkan integrasi resmi WhatsApp Business Platform/API
+dan konfigurasi akun/nomor bisnis. Cara sederhana tanpa API: guru membuka Google Sheets dan
+membagikan/menyalin rekap, atau menggunakan tombol berbagi dari perangkat.
+
+PENTING
+- "Anyone" membuat tautan dapat diakses siapa pun yang memilikinya. Jangan masukkan data sensitif.
+- Jika ada siswa salah mengisi, guru dapat memperbaiki barisnya langsung di Spreadsheet.
+- Untuk absensi kelas yang digunakan setiap hari, data akan ditambahkan sebagai baris baru per tanggal.
+- Untuk hari berikutnya, nomor urut yang sama dapat mengisi lagi karena pemeriksaan duplikat berdasarkan tanggal.

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123b35"><title>Absensi Siswa</title>
+<style>
+:root{--g:#123b35;--mint:#e8f2ee;--ink:#20302b;--muted:#72817b;--line:#e3ebe7}
+*{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:620px;margin:0 auto;padding:28px 16px 44px}.brand{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.logo{width:46px;height:46px;border-radius:15px;background:var(--g);color:white;display:grid;place-items:center;font-size:22px}
+h1{font-size:25px;letter-spacing:-.6px;margin:0}.sub{margin:4px 0 0;color:var(--muted);font-size:13px}
+.card{background:white;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 8px 28px #163d2e08}
+.tag{display:inline-block;background:var(--mint);color:var(--g);font-size:11px;font-weight:800;padding:7px 10px;border-radius:30px;margin-bottom:14px}
+label{display:block;font-size:12px;font-weight:750;color:#596a63;margin:15px 0 7px}
+input,select{width:100%;border:1px solid var(--line);border-radius:11px;padding:13px 12px;font:inherit;font-size:15px;background:white;color:var(--ink);outline:none}
+input:focus,select:focus{border-color:#6b9a88;box-shadow:0 0 0 3px var(--mint)}
+button{width:100%;margin-top:20px;background:var(--g);color:white;border:0;border-radius:11px;padding:14px;font:inherit;font-weight:750;font-size:14px;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}.hint{font-size:12px;color:var(--muted);line-height:1.6;margin:14px 0 0}
+#result{display:none;margin-top:14px;padding:12px;border-radius:11px;font-size:13px;line-height:1.5}
+.ok{display:block!important;background:#e8f5ed;color:#17613b}.err{display:block!important;background:#fff0ed;color:#9b3325}
+footer{text-align:center;color:#8a9690;font-size:11px;margin-top:20px}
+</style></head>
+<body><main class="wrap">
+<header class="brand"><div class="logo">✓</div><div><h1>Absensi Siswa</h1><p class="sub">Form kehadiran · mudah, cepat, dan praktis</p></div></header>
+<section class="card">
+<div class="tag">FORM ABSENSI HARI INI</div>
+<form id="form">
+<label for="nomor">NOMOR URUT (1–34)</label><input id="nomor" type="number" min="1" max="34" required placeholder="Masukkan nomor urut Anda">
+<label for="nama">NAMA LENGKAP</label><input id="nama" maxlength="100" required placeholder="Tulis nama lengkap">
+<label for="kelas">KELAS</label><input id="kelas" maxlength="30" required placeholder="Contoh: XI F">
+<label for="status">STATUS KEHADIRAN</label><select id="status" required><option value="">Pilih kehadiran</option><option>Hadir</option><option>Izin</option><option>Sakit</option></select>
+<button id="submit" type="submit">Kirim Absensi</button>
+</form><div id="result" role="status"></div>
+<p class="hint">Pastikan nomor urut dan nama sudah benar sebelum mengirim. Satu nomor urut hanya dapat mengirim satu absensi per tanggal. Jika ada kesalahan, hubungi guru untuk koreksi.</p>
+</section><footer>ABSENSI SISWA · Data masuk ke rekap guru</footer></main>
+<script>
+const form=document.getElementById('form'), btn=document.getElementById('submit'), result=document.getElementById('result');
+form.addEventListener('submit',e=>{
+ e.preventDefault(); result.className=''; result.style.display='none';
+ const payload={nomor:Number(document.getElementById('nomor').value),nama:document.getElementById('nama').value.trim(),kelas:document.getElementById('kelas').value.trim(),status:document.getElementById('status').value};
+ if(!payload.nomor||payload.nomor<1||payload.nomor>34||!payload.nama||!payload.kelas||!payload.status){show('Mohon lengkapi semua kolom dengan benar.','err');return}
+ btn.disabled=true;btn.textContent='Mengirim...';
+ google.script.run.withSuccessHandler(res=>{btn.disabled=false;btn.textContent='Kirim Absensi';show(res.message,res.ok?'ok':'err');if(res.ok)form.reset();})
+ .withFailureHandler(err=>{btn.disabled=false;btn.textContent='Kirim Absensi';show('Pengiriman gagal. Periksa koneksi internet lalu coba lagi.','err');})
+ .submitAttendance(payload);
+});
+function show(msg,cls){result.textContent=msg;result.className=cls;result.style.display='block'}
+</script></body></html>
